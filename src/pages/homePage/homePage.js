@@ -11,7 +11,7 @@ import Navbar from "../../components/navbar/Navbar";
 import SectionCoursePro from "./sectionPage/SectionCoursePro";
 import Footer from "../../components/footer/Footer";
 
-export default function HomePage() {
+export default function Homepage() {
   return (
     <main className="flex bg-[#f0f9ff]/20">
       <Navbar />
@@ -19,7 +19,7 @@ export default function HomePage() {
         <SectionIntroduce />
         <SectionCourseFree />
         <SectionCoursePro />
-        <Footer/>
+        <Footer />
       </div>
     </main>
   );
