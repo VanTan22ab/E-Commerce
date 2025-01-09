@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa"; // Import Font Awesome icons
 import "./AuthForm.css";
-import axios from "axios";
-import URL from "../../config/URLconfig";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { ToastContainer, toast, Slide } from "react-toastify";
 
@@ -43,48 +41,9 @@ export default function AuthForm() {
     setEmailOTP(e.target.value);
   };
 
-  const handelLogin = () => {
-    console.log(fromLogin); // Kiểm tra dữ liệu gửi
-    axios
-      .post(`${URL}/api/auth/login`, fromLogin, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        localStorage.setItem("id", response.data.data.id);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", response.data.data.username);
-        localStorage.setItem("img", response.data.data.img);
-        console.log(response.data.data);
-        // Dùng navigate để điều hướng mà không tải lại trang
-        toast.success("Đăng nhập thành công!", {
-          position: "top-right",
-          autoClose: 3000,
-          transition: Slide,
-        });
-        setTimeout(() => {
-          window.location.replace("/");
-        }, 3000);
-      })
-      .catch((error) => {
-        console.error(
-          "Error login:",
-          error.response ? error.response.data : error.message
-        );
-      });
-  };
-
   //--- login google ----
   const handleGoogleLogin = () => {
     window.location.href = `${URL}/oauth2/authorization/google`;
-  };
-
-  const handelRegister = () => {
-    axios.post(`${URL}/api/auth/user-register`, fromData).then((response) => {
-      console.log(response.data);
-      console.log("Register success");
-    });
   };
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -103,40 +62,17 @@ export default function AuthForm() {
   // logic forgot password and reset password
   const [count, setCount] = useState(60);
   const [isCounting, setIsCounting] = useState(false);
-
-  //--------------------------//
-  const handelSendOTP = () => {
-    axios
-      .post(`${URL}/api/auth/forgot-password`, { email: emailOTP })
-      .then((response) => {
-        console.log("Send OTP success !", response);
-      })
-      .catch((error) => {
-        console.log("Error : ", error);
-      });
-  };
   //--------------------------//
   const resetPassword = {
     email: emailOTP,
     otp: otpResetPassword,
     password: newPassword,
   };
-  const handelResetPassword = () => {
-    axios
-      .post(`${URL}/api/auth/reset-password`, resetPassword)
-      .then((response) => {
-        console.log("Reset password success !", response);
-      })
-      .catch((error) => {
-        console.log("Error : ", error);
-      });
-  };
 
   useEffect(() => {
     let intervalId;
     if (isCounting) {
       //--- func send OTP ---
-      handelSendOTP();
       intervalId = setInterval(() => {
         setCount((prevCount) => {
           if (prevCount <= 1) {
@@ -288,10 +224,7 @@ export default function AuthForm() {
                 setConfirmPassword(e.target.value);
               }}
             />
-            <button
-              onClick={() => handelResetPassword()}
-              className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400"
-            >
+            <button className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400">
               Create New Password
             </button>
           </div>
@@ -324,10 +257,7 @@ export default function AuthForm() {
             >
               Forget your Password? Click here!
             </a>
-            <button
-              onClick={() => handelLogin()}
-              className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400"
-            >
+            <button className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400">
               Sign In
             </button>
             <p className="text-center text-lg m-2">Or</p>
@@ -386,12 +316,7 @@ export default function AuthForm() {
               type="password"
               placeholder="Confirm Password"
             />
-            <button
-              onClick={() => {
-                handelRegister();
-              }}
-              className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400"
-            >
+            <button className="bg-cyan-500 text-white rounded-xl h-12 text-xl font-semibold hover:bg-cyan-400">
               Sign Up
             </button>
             <p className="text-rose-600 text-sm text-center">
